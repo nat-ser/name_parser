@@ -6,4 +6,4 @@ Style/StringLiterals:
 AllCops:
   TargetRubyVersion: 2.4
 Metrics/LineLength:
-  Max: 100
+  Max: 120

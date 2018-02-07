@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-# converts input csv into people objects
 require "pry"
 # because DateTime.parse takes in date/month/year format
 require "american_date"
 
+# converts input csv into people objects
 class Input
   def self.extract_people(file)
     raise "Input cannot be empty" if CSV.read(file).empty?
@@ -12,15 +12,20 @@ class Input
 
     CSV.foreach(file, col_sep: col_sep, skip_blanks: true) do |row|
       standardize_row(row, col_sep)
-      p = Person.new(*row)
-      p.gender = format_gender!(p.gender)
-      p.birth_date = DateTime.parse(p.birth_date)
-      people << p
+      person = Person.new(*row)
+      format_input_person_attrs(person)
+      people << person
     end
+
     people
   end
 
   private_class_method
+
+  def self.format_input_person_attrs(person)
+    person.gender = format_gender!(person.gender)
+    person.birth_date = DateTime.parse(person.birth_date)
+  end
 
   def self.format_gender!(gender)
     raise "Please use input with valid gender" if gender.strip.length > 6
@@ -39,15 +44,10 @@ class Input
   def self.determine_delimeter_and_headers(file)
     File.foreach(file) do |line|
       words = line.strip.split("")
-      if words.empty?
-        next
-      elsif words.include?(",")
-        return ","
-      elsif words.include?("|")
-        return "|"
-      else
-        return " "
-      end
+      next if words.empty?
+      return "," if words.include?(",")
+      return "|" if words.include?("|")
+      return " "
     end
   end
 end
