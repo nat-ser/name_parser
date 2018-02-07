@@ -7,9 +7,9 @@ describe "Non-standard input" do
   let(:comparison_path) { "spec/fixtures/output_5.csv" }
 
   it "sorts by 3 columns, color desc, birth_date asc, first_name desc " do
-    ApplicationController.convert(input_path, output_path, color: "desc",
+    ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { color: "desc",
                                                            birth_date: "asc",
-                                                           first_name: "desc")
+                                                           first_name: "desc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path)
     expect(files_identical).to eq true

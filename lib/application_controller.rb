@@ -13,7 +13,7 @@ class ApplicationController
   end
 
   def self.convert(input_path:, output_path:, opts: {})
-    people_from_csv = Input.parse(input_path)
+    people_from_csv = Input.format(input_path)
     sorted_people = PersonSorter.sort_with_opts!(people_from_csv, opts)
     Output.to_csv(output_path, sorted_people)
   end

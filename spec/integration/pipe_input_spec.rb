@@ -9,23 +9,23 @@ describe "Pipe delimited file sorts by test columns" do
   let(:comparison_path_3) { "spec/fixtures/output_3.csv" }
 
   it "gender asc and last name asc" do
-    ApplicationController.convert(input_path, output_path, gender: "asc",
-                                                           last_name: "asc")
+    ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { gender: "asc",
+                                                           last_name: "asc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_1)
     expect(files_identical).to eq true
   end
 
   it "birth date asc and then last name asc" do
-    ApplicationController.convert(input_path, output_path, birth_date: "asc",
-                                                           last_name: "asc")
+    ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { birth_date: "asc",
+                                                           last_name: "asc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_2)
     expect(files_identical).to eq true
   end
 
   it "last name, desc" do
-    ApplicationController.convert(input_path, output_path, last_name: "desc")
+    ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { last_name: "desc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_3)
     expect(files_identical).to eq true
@@ -38,8 +38,8 @@ describe "Pipe delimited file sorts by alternative columns" do
   let(:comparison_path_4) { "spec/fixtures/output_4.csv" }
 
   it "color asc then first name desc" do
-    ApplicationController.convert(input_path, output_path, color: "asc",
-                                                           first_name: "desc")
+    ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { color: "asc",
+                                                           first_name: "desc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_4)
     expect(files_identical).to eq true

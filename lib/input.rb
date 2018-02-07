@@ -1,28 +1,39 @@
 # frozen_string_literal: true
 # converts input csv into people objects
+require 'pry'
+require 'american_date'
+
 class Input
-  def self.parse(file)
+  def self.format(file)
     raise "Input cannot be empty" if CSV.read(file).empty?
-    col_sep = determine_delimeter(file)
+
+    col_sep = determine_delimeter_and_headers(file)
     people = []
     CSV.foreach(file, col_sep: col_sep, skip_blanks: true) do |row|
       standardize_row(row, col_sep)
       format_row!(row)
-      people << Person.new(*row)
+      p = Person.new(*row)
+      p.birth_date = DateTime.parse(p.birth_date)
+      people << p
     end
     people
   end
 
+
   private_class_method
 
   def self.format_row!(row)
-    row.map!(&:strip)
+    begin
+    row.map! { |col| col.strip if col.respond_to? :strip}
+    rescue ArgumentError
+     date
+   end
+    'not'
     row[2] = format_gender!(row[2])
-    row[3] = parse_date(row[3])
   end
 
   def self.format_gender!(gender)
-    raise "Please use input with valid gender" if gender.length > 6
+    raise "Please use input with valid gender" if gender.strip.length > 6
     gender.capitalize!
     if gender == "F"
       "Female"
@@ -33,29 +44,19 @@ class Input
     end
   end
 
-  def self.parse_date(date)
-    if date.split("").include?("/")
-      Date.strptime(date.strip, "%m/%d/%Y")
-    elsif date.split("").include?("-")
-      Date.strptime(date.strip, "%m-%d-%Y")
-    elsif date.split("").include?(".")
-      Date.strptime(date.strip, "%m.%d.%Y")
-    else
-      Date.parse(date)
-    end
-  end
-
   def self.standardize_row(row, delimiter)
     # all input has a middle name that's not expected in the output
     row.delete_at(2) unless delimiter == ","
-    raise "Oops! Can only parse input with 5 or 6 columns" unless row.length == 5
+    raise "Oops! Input has to have 5 or 6 columns" unless row.length == 5
     row[3], row[4] = row[4], row[3] unless delimiter == " "
   end
 
-  def self.determine_delimeter(file)
+  def self.determine_delimeter_and_headers(file)
     File.foreach(file) do |line|
-      words = line.split
+      words = line.strip.split("")
       case
+      when words.empty?
+        next
       when words.include?(",")
         return ","
       when words.include?("|")
