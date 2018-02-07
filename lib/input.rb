@@ -2,13 +2,15 @@
 # converts input csv into people objects
 class Input
   def self.parse(file)
-    del = delimiter(file)
-    csv = CSV.read(file, col_sep: del, skip_blanks: true)
-    csv.each_with_object([]) do |row, people|
-      standardize_row(row, del)
+    raise "Input cannot be empty" if CSV.read(file).empty?
+    col_sep = determine_delimeter(file)
+    people = []
+    CSV.foreach(file, col_sep: col_sep, skip_blanks: true) do |row|
+      standardize_row(row, col_sep)
       format_row!(row)
       people << Person.new(*row)
     end
+    people
   end
 
   private_class_method
@@ -44,26 +46,23 @@ class Input
   end
 
   def self.standardize_row(row, delimiter)
+    # all input has a middle name that's not expected in the output
     row.delete_at(2) unless delimiter == ","
-    raise "Oops! Input has to have 5 or 6 columns" unless row.length == 5
+    raise "Oops! Can only parse input with 5 or 6 columns" unless row.length == 5
     row[3], row[4] = row[4], row[3] unless delimiter == " "
   end
 
-  def self.delimiter(file)
-    row = first_line_with_content(file)
-    raise "Input is empty" if row.nil?
-    if row.split("").include?(",")
-      ","
-    elsif row.split("").include?("|")
-      "|"
-    else
-      " "
-    end
-  end
-
-  def self.first_line_with_content(file)
+  def self.determine_delimeter(file)
     File.foreach(file) do |line|
-      line == "\n" || line.empty? ? next : (return line)
+      words = line.split
+      case
+      when words.include?(",")
+        return ","
+      when words.include?("|")
+        return "|"
+      else
+        return " "
+      end
     end
   end
 end
