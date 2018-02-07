@@ -5,3 +5,5 @@ Style/StringLiterals:
   Enabled: true
 AllCops:
   TargetRubyVersion: 2.4
+Metrics/LineLength:
+  Max: 100

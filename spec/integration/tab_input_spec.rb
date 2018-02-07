@@ -10,7 +10,7 @@ describe "Tab delimimited file sorts by test columns" do
 
   it "gender asc and last name asc" do
     ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { gender: "asc",
-                                                           last_name: "asc" })
+                                                                                            last_name: "asc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_1)
     expect(files_identical).to eq true
@@ -18,7 +18,7 @@ describe "Tab delimimited file sorts by test columns" do
 
   it "birth date asc and then last name asc" do
     ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { birth_date: "asc",
-                                                           last_name: "asc" })
+                                                                                            last_name: "asc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_2)
     expect(files_identical).to eq true
@@ -39,7 +39,7 @@ describe "Tab delimimited file sorts by alternative columns" do
 
   it "color asc then first name desc" do
     ApplicationController.convert(input_path: input_path, output_path: output_path, opts: { color: "asc",
-                                                           first_name: "desc" })
+                                                                                            first_name: "desc" })
 
     files_identical = FileUtils.identical?(output_path, comparison_path_4)
     expect(files_identical).to eq true
