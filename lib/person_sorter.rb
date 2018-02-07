@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # sorts people in desired order
 class PersonSorter
   def self.sort_with_opts!(people, opts = {})

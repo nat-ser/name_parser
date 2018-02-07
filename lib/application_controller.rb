@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # CLI controller to parse input into sorted output
 class ApplicationController
   def self.auto_run

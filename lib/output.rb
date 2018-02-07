@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # converts people objects to csv
 class Output
   def self.to_csv(output_path, sorted_people)
