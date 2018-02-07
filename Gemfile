@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby "2.4.0"
 
 group "development" do
-  gem "rubocop", "~> 0.47.1", require: false
+  gem "rubocop", require: false
 end
 
 group "test" do

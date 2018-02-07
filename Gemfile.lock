@@ -44,7 +44,7 @@ DEPENDENCIES
   american_date
   pry
   rspec
-  rubocop (~> 0.47.1)
+  rubocop
 
 RUBY VERSION
    ruby 2.4.0p0
