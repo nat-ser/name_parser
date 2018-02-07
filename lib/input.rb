@@ -5,43 +5,28 @@ require 'american_date'
 
 class Input
   def self.format(file)
+    # CSV::Converters[:mytime] = lambda { |gender| gender.capitalizez!.scan(/^Female$|^F$|^Male$|^M$/) rescue gender}
     raise "Input cannot be empty" if CSV.read(file).empty?
-
     col_sep = determine_delimeter_and_headers(file)
     people = []
+
     CSV.foreach(file, col_sep: col_sep, skip_blanks: true) do |row|
       standardize_row(row, col_sep)
-      format_row!(row)
+      row.map!(&:strip)
       p = Person.new(*row)
+      p.gender = format_gender!(p.gender)
       p.birth_date = DateTime.parse(p.birth_date)
       people << p
     end
     people
   end
 
-
   private_class_method
-
-  def self.format_row!(row)
-    begin
-    row.map! { |col| col.strip if col.respond_to? :strip}
-    rescue ArgumentError
-     date
-   end
-    'not'
-    row[2] = format_gender!(row[2])
-  end
 
   def self.format_gender!(gender)
     raise "Please use input with valid gender" if gender.strip.length > 6
-    gender.capitalize!
-    if gender == "F"
-      "Female"
-    elsif gender == "M"
-      "Male"
-    else
-      gender
-    end
+    return "Female" if gender.capitalize.match(/^Female$|^F$/)
+    "Male" if gender.capitalize.match(/^Male$|^M$/)
   end
 
   def self.standardize_row(row, delimiter)
